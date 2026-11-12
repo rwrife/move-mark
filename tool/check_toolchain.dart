@@ -5,7 +5,11 @@ Future<void> main() async {
   final pin = jsonDecode(
     File('docs/toolchain.json').readAsStringSync(),
   ) as Map<String, dynamic>;
-  final result = await Process.run('flutter', ['--version', '--machine']);
+  final result = await Process.run(
+    Platform.isWindows ? 'flutter.bat' : 'flutter',
+    ['--version', '--machine'],
+    runInShell: Platform.isWindows,
+  );
   if (result.exitCode != 0) {
     throw StateError('flutter --version failed: ${result.stderr}');
   }

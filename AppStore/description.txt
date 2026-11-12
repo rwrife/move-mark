@@ -1,0 +1,14 @@
+Move Mark: Offline move-day box tracker for phone, tablet, and Windows.
+
+Moving homes is stressful when you open the wrong carton looking for your kettle, phone charger, or work laptop. Move Mark gives you a private, searchable manifest of every box you pack—without accounts, cloud sync, or internet access.
+
+FEATURES (Planned for initial release):
+- Carton Manifest: Number each box, list its contents, note fragile items, and assign it to its destination room.
+- Essentials & Priority: Flag unpack-first boxes so you immediately find night-one necessities and work tools.
+- Box Lifecycle: Track status from Packed, to Loaded, to Delivered, to Opened, with reversible check-off.
+- Search & Room Filter: Find any packed item in seconds across all cartons, or filter by destination room.
+- Fully Offline & Private: All records stay on your device. No analytics, no accounts, and no trackers.
+- Local Backup & Export: Export your manifest to CSV or JSON backup files, and restore anytime.
+- Responsive & Platform-Authentic: Works seamlessly on phone, tablet, and Windows desktop with native-feeling controls and full keyboard support.
+
+NOTE: Move Mark is a self-hosted, offline organization tool. It does not include automated shipping carrier tracking, barcode/QR scanning, or remote multi-user cloud synchronization.

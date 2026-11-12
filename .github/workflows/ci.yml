@@ -20,8 +20,9 @@ jobs:
         with:
           flutter-version: '3.47.7'
           channel: stable
-      - run: dart run tool/check_toolchain.dart
+      - run: flutter --version
       - run: flutter pub get --enforce-lockfile
+      - run: dart run tool/check_toolchain.dart
       - run: flutter analyze --fatal-infos
       - run: flutter test
       - run: flutter build windows --release
@@ -45,8 +46,9 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: git rev-parse HEAD
-      - run: dart run tool/check_toolchain.dart
+      - run: flutter --version
       - run: flutter pub get --enforce-lockfile
+      - run: dart run tool/check_toolchain.dart
       - run: flutter analyze --fatal-infos
       - run: flutter test
       - name: Verify clean tree
@@ -62,7 +64,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - run: git rev-parse HEAD
-      - run: dart run tool/check_toolchain.dart
+      - run: flutter --version
       - run: flutter pub get --enforce-lockfile
+      - run: dart run tool/check_toolchain.dart
       - run: flutter build apk --debug
       - run: test -s build/app/outputs/flutter-apk/app-debug.apk

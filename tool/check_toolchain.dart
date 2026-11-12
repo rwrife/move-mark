@@ -13,7 +13,12 @@ Future<void> main() async {
   if (result.exitCode != 0) {
     throw StateError('flutter --version failed: ${result.stderr}');
   }
-  final sdk = jsonDecode(result.stdout as String) as Map<String, dynamic>;
+  final raw = result.stdout as String;
+  final jsonStart = raw.indexOf('{');
+  if (jsonStart == -1) {
+    throw StateError('No JSON object found in output: $raw');
+  }
+  final sdk = jsonDecode(raw.substring(jsonStart)) as Map<String, dynamic>;
   for (final entry in <String, String>{
     'frameworkVersion': pin['flutter_version'] as String,
     'channel': pin['flutter_channel'] as String,

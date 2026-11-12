@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: git rev-parse HEAD
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+      - run: dart run tool/check_toolchain.dart
+      - run: flutter pub get --enforce-lockfile
+      - run: flutter analyze --fatal-infos
+      - run: flutter test
+      - run: flutter build windows --release
+      - name: Verify Windows bundle
+        shell: pwsh
+        run: |
+          $dir = 'build/windows/x64/runner/Release'
+          foreach ($file in @('move_mark.exe', 'flutter_windows.dll', 'data/icudtl.dat', 'data/flutter_assets/AssetManifest.bin')) {
+            $path = Join-Path $dir $file
+            if (!(Test-Path $path -PathType Leaf) -or (Get-Item $path).Length -eq 0) { throw "Missing or empty: $path" }
+          }
+      - run: git diff --exit-code
+
+  linux:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/project516/flutter:3.47.7@sha256:d90580050fc8461773cdb48a38cffe67973fdd2963c72bb378d96d697dc02840
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: git rev-parse HEAD
+      - run: dart run tool/check_toolchain.dart
+      - run: flutter pub get --enforce-lockfile
+      - run: flutter analyze --fatal-infos
+      - run: flutter test
+      - name: Verify clean tree
+        run: git diff --exit-code
+
+  android:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/project516/flutter:3.47.7@sha256:d90580050fc8461773cdb48a38cffe67973fdd2963c72bb378d96d697dc02840
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: git rev-parse HEAD
+      - run: dart run tool/check_toolchain.dart
+      - run: flutter pub get --enforce-lockfile
+      - run: flutter build apk --debug
+      - run: test -s build/app/outputs/flutter-apk/app-debug.apk
